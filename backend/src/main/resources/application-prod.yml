@@ -25,9 +25,7 @@ spring:
       timeout: 60000
 
   cache:
-    type: redis
-    redis:
-      time-to-live: 600000
+    type: none
 
 server:
   port: ${PORT:8080}
