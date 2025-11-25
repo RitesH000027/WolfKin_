@@ -1,7 +1,10 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
+  (window.location.hostname === 'localhost' 
+    ? 'http://localhost:8080/api' 
+    : 'https://wolfkin.onrender.com/api')
 
 // Create axios instance
 const api = axios.create({
