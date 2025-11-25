@@ -1,0 +1,70 @@
+# Development override for docker-compose.yml
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  # Development PostgreSQL with exposed port and sample data
+  postgres:
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: ecom_dev
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./init-scripts/dev-data.sql:/docker-entrypoint-initdb.d/02-dev-data.sql
+
+  # Development Redis with no password for easier access
+  redis:
+    command: redis-server --appendonly yes
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_dev_data:/data
+
+  # Development Backend with hot reload and debug port
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DATABASE_URL: jdbc:postgresql://postgres:5432/ecom_dev
+      REDIS_PASSWORD: ""
+      DDL_AUTO: create-drop
+      SHOW_SQL: true
+      LOG_LEVEL: DEBUG
+      MANAGEMENT_HEALTH_MAIL_ENABLED: false
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: always
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/target:/app/target
+      - backend_dev_uploads:/app/uploads
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Debug port
+
+  # Development Frontend with hot reload
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080/api
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - /app/node_modules
+    ports:
+      - "3000:80"
+      - "24678:24678"  # Vite HMR port
+    networks:
+      - ecom-network
+
+networks:
+  ecom-network:
+    external: true
+    name: ecom-network
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
+  backend_dev_uploads:

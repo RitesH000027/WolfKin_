@@ -1,0 +1,104 @@
+# Production override for docker-compose.yml
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+services:
+  # Production PostgreSQL with security hardening
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secure_password_here}
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+    # Don't expose port in production
+    ports: []
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  # Production Redis with security
+  redis:
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-secure_redis_password}
+    ports: []
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  # Production RabbitMQ
+  rabbitmq:
+    environment:
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-secure_rabbitmq_password}
+    # Only expose management UI if needed
+    ports:
+      - "15672:15672"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  # Production Backend
+  backend:
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-secure_password_here}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-secure_redis_password}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-secure_rabbitmq_password}
+      JWT_SECRET: ${JWT_SECRET:-change_this_in_production}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-change_this_admin_password}
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+
+  # Production Frontend with nginx optimization
+  frontend:
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 32M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  # Remove adminer in production
+  adminer:
+    deploy:
+      replicas: 0
+
+  # Add reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    container_name: ecom-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - ecom-network
+
+volumes:
+  postgres_prod_data:
+    external: true
+  backend_prod_uploads:
+    external: true

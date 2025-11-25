@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+  
+  h2:
+    console:
+      enabled: true
+  
+  data:
+    redis:
+      host: localhost
+      port: 6370 # Different port for tests
+
+jwt:
+  secret: test-secret-key-1234567890123456789012345678901234567890
+  expiration-ms: 60000 # 1 minute for tests
+
+logging:
+  level:
+    com.example.ecom: WARN
+    org.springframework: WARN
+    org.hibernate: WARN
