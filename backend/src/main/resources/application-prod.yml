@@ -33,7 +33,7 @@ server:
     include-message: always
 
 jwt:
-  secret: ERgZdST6M5QozUfX0i9PALt1lWOVmK2cuCBwNavpej3Fsxhby7qHkYJ8InDrG4
+  secret: TOD2rsUZPg9HGzRqcnjuVW7fQtN41i0hEXYM5dKwLxC3FpayJvm6koebSI8lBAXtra
   expiration: 86400000
 
 razorpay:
