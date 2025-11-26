@@ -18,6 +18,7 @@ import AdminProducts from './pages/Admin/Products'
 import AdminOrders from './pages/Admin/Orders'
 import ProtectedRoute from './components/ProtectedRoute'
 import NotFound from './pages/NotFound'
+import UnderDevelopment from './pages/UnderDevelopment'
 
 function App() {
   return (
@@ -66,6 +67,15 @@ function App() {
             <Route path="products" element={<AdminProducts />} />
             <Route path="orders" element={<AdminOrders />} />
           </Route>
+          
+          {/* Under Development Pages */}
+          <Route path="categories" element={<UnderDevelopment />} />
+          <Route path="about" element={<UnderDevelopment />} />
+          <Route path="contact" element={<UnderDevelopment />} />
+          <Route path="shipping" element={<UnderDevelopment />} />
+          <Route path="returns" element={<UnderDevelopment />} />
+          <Route path="faq" element={<UnderDevelopment />} />
+          <Route path="support" element={<UnderDevelopment />} />
           
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
