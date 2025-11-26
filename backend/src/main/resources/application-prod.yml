@@ -33,7 +33,7 @@ server:
     include-message: always
 
 jwt:
-  secret: ${JWT_SECRET:your-secret-key-change-in-production}
+  secret: ERgZdST6M5QozUfX0i9PALt1lWOVmK2cuCBwNavpej3Fsxhby7qHkYJ8InDrG4
   expiration: 86400000
 
 razorpay:
