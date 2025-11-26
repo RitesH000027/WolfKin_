@@ -81,6 +81,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
           <p>Built with React, Spring Boot, and ❤️</p>
+          <p className="mt-2">Developed by <span className="text-primary-500 font-semibold">Ritesh Gupta</span></p>
         </div>
       </div>
     </footer>
