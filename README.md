@@ -421,9 +421,6 @@ Contributions are welcome! Please:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 👨‍💻 Developer
 
@@ -454,8 +451,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 📧 **For queries or suggestions, feel free to reach out!**
 
-🚀 **Live Demo:** [Coming Soon - Deploy to Railway]
-
----
 
 **Built with ❤️ by Ritesh Gupta**
