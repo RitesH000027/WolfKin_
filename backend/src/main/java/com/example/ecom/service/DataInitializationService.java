@@ -48,6 +48,24 @@ public class DataInitializationService {
         }
     }
 
+    @Transactional
+    public void resetAndInitializeData() {
+        log.info("Resetting all data...");
+        // Delete in correct order to respect foreign key constraints
+        productRepository.deleteAll();
+        categoryRepository.deleteAll();
+        couponRepository.deleteAll();
+        // Don't delete users to preserve accounts
+        log.info("All product and category data deleted");
+        
+        // Reinitialize with new data
+        log.info("Reinitializing with new clothing data...");
+        initializeCategories();
+        initializeProducts();
+        initializeCoupons();
+        log.info("Data reset and reinitialization completed!");
+    }
+
     private void initializeCategories() {
         List<Category> categories = Arrays.asList(
             createCategory("Men's Clothing", "mens-clothing", "Stylish apparel for men", "https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=500"),

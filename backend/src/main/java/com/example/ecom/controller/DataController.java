@@ -25,4 +25,16 @@ public class DataController {
                     .body("Error initializing data: " + e.getMessage());
         }
     }
+
+    @PostMapping("/reset")
+    @Operation(summary = "Reset and reinitialize data", description = "Clear all existing data and reinitialize with fresh data")
+    public ResponseEntity<String> resetData() {
+        try {
+            dataInitializationService.resetAndInitializeData();
+            return ResponseEntity.ok("Data reset and reinitialized successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body("Error resetting data: " + e.getMessage());
+        }
+    }
 }
