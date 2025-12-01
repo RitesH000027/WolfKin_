@@ -16,6 +16,9 @@ export function useProducts(params = {}) {
     queryKey: PRODUCT_QUERY_KEYS.list(params),
     queryFn: () => productsApi.getAll(params),
     keepPreviousData: true,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
 
